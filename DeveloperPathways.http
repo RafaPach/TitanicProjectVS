@@ -1,0 +1,6 @@
+@DeveloperPathways_HostAddress = http://localhost:5217
+
+GET {{DeveloperPathways_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
