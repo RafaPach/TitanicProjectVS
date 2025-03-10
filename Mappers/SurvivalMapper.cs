@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DeveloperPathways.Domain;
 using DeveloperPathways.Dtos;
 using DeveloperPathways.Models;
 

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using DeveloperPathways.Data;
-using DeveloperPathways.Models;
+using DeveloperPathways.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperPathways.Services
@@ -19,7 +19,7 @@ namespace DeveloperPathways.Services
         {
             _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "titanic.csv");
             _dbOptions = new DbContextOptionsBuilder<TitanicContext>()
-                .UseSqlServer(@"Server=GBG7YR034\SQLEXPRESS;Database=titanic;Trusted_Connection=True;TrustServerCertificate=True;")
+                .UseSqlServer(@"Server=DESKTOP-V4GVEDM\SQLEXPRESS;Database=titanic;Trusted_Connection=True;TrustServerCertificate=True;")
                 .Options;
         }
 
@@ -66,11 +66,8 @@ namespace DeveloperPathways.Services
             {
                 if (!context.Passengers.Any(p => p.Name == record.Name && p.Ticket == record.Ticket))
                 {
-                    passengers.Add(new Passenger
+                    var passenger = new Passenger(record.Name, record.Pclass, record.Survived)
                     {
-                        Survived = record.Survived,
-                        Pclass = record.Pclass,
-                        Name = record.Name,
                         Sex = record.Sex,
                         Age = record.Age,
                         SibSp = record.SibSp,
@@ -79,7 +76,9 @@ namespace DeveloperPathways.Services
                         Fare = record.Fare,
                         Cabin = record.Cabin,
                         Embarked = record.Embarked
-                    });
+                    };
+
+                    passengers.Add(passenger);
                 }
             }
             return passengers;

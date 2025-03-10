@@ -3,32 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeveloperPathways.Dtos;
-//using DeveloperPathways.Models;
-using DeveloperPathways.Domain;
+using DeveloperPathways.Domain; 
+
 
 namespace DeveloperPathways.Mappers
 {
     public static class PassengerMapper
     {
-        public static PassengerDto ToPassengerDto(this Passenger passengerModel)
+        public static PassengerDto ToPassengerDto(this Passenger passenger)
         {
-            return new PassengerDto
+                return new PassengerDto
             {
-
-                Id = passengerModel.PassengerId,
-                Name = passengerModel.Name,
-                Sex = passengerModel.Sex,
-                Age = passengerModel.Age.HasValue ? Math.Round(passengerModel.Age.Value, MidpointRounding.AwayFromZero) : (double?)null,
-                Fare = passengerModel.Fare,
-                Cabin = passengerModel.Cabin,
-                Pclass = passengerModel.Pclass,
-                Survived = passengerModel.Survived
+                Id = passenger.PassengerId,
+                Name = passenger.Name,
+                Sex = passenger.Sex,
+                Age = passenger.Age.HasValue ? Math.Round(passenger.Age.Value, MidpointRounding.AwayFromZero) : (double?)null,
+                Fare = passenger.Fare,
+                Cabin = passenger.Cabin
             };
         }
 
         public static Passenger ToPassenger(this PassengerDto passengerDto)
         {
-            return new Passenger(passengerDto.Name, passengerDto.Pclass, passengerDto.Survived);
+            return new Passenger(passengerDto.Name, null, null); // Default Pclass and Survived to null
         }
     }
 }
@@ -47,4 +44,4 @@ namespace DeveloperPathways.Mappers
 //            };
 //        }
 //    }
-}
+

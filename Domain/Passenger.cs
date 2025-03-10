@@ -1,5 +1,5 @@
 ﻿namespace DeveloperPathways.Domain
-{
+{ 
     public class Passenger
     {
         public int PassengerId { get; set; }
@@ -16,19 +16,18 @@
         public string? Embarked { get; set; }
 
         // constructor for required fields
-        public Passenger (string name , int? pclass, bool? survived)
+        // Constructor requiring the essential parameters for validity
+        public Passenger(string? name, int? pclass, bool? survived)
         {
             if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("Name is required");
-            }
+                throw new ArgumentException("Name is required.", nameof(name));
 
             Name = name;
             Pclass = pclass;
             Survived = survived;
         }
 
-        private Passenger() { }
+        public Passenger() { }
 
         public void UpdateDetails(string? sex, double? age, int? sibsp, int? parch, string? ticket, double? fare, string? cabin, string? embarked)
         {

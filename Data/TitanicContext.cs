@@ -1,3 +1,4 @@
+using DeveloperPathways.Domain;
 using DeveloperPathways.Models;
 using Microsoft.EntityFrameworkCore;
 

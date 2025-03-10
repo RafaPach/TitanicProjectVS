@@ -9,7 +9,6 @@ namespace DeveloperPathways.Dtos
         public double? Age { get; set; }
         public double? Fare { get; set; }
         public string? Cabin { get; set; }
-        public int? Pclass { get; set; }
-        public bool? Survived { get; set; }
+
     }
 }

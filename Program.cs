@@ -1,9 +1,13 @@
 using DeveloperPathways.Data;
 using DeveloperPathways.Services;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using DeveloperPathways.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMediatR(typeof(DeveloperPathwaysController).Assembly); 
 
 // Add services to the container.
 builder.Services.AddDbContext<TitanicContext>(options =>
@@ -12,16 +16,16 @@ builder.Services.AddDbContext<TitanicContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<CsvService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
