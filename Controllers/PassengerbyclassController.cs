@@ -3,6 +3,8 @@ using System.Linq;
 using DeveloperPathways.Data;
 using DeveloperPathways.Dtos;
 using DeveloperPathways.Mappers;
+using MediatR;
+using DeveloperPathways.Application.Queries;
 
 namespace DeveloperPathways.Controllers
 {
@@ -10,25 +12,20 @@ namespace DeveloperPathways.Controllers
     [Route("passenger-class")] 
     public class PassengerByClassController : ControllerBase
     {
-        private readonly TitanicContext _context;
+        private readonly IMediator _mediator;
 
-        public PassengerByClassController(TitanicContext context)
+        public PassengerByClassController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public ActionResult<List<FinalClassBreakDown>> GetByClass()
+        public async Task<ActionResult<FinalClassBreakDown>> GetByClass()
         {
-        
-        var passengerByClass = _context.Passengers.ToList().ToClassAggregdationDto();
 
-        var final = new FinalClassBreakDown {
-            ClassBreakdown = passengerByClass
-        };
+            var result = await _mediator.Send(new GetByClassQuery());
 
-        return Ok(final);
-
+            return Ok(result);
         }
     }
 }
