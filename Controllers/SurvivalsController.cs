@@ -1,6 +1,8 @@
+using DeveloperPathways.Application.Queries;
 using DeveloperPathways.Data;
 using DeveloperPathways.Mappers;
 using DeveloperPathways.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -12,27 +14,20 @@ namespace DeveloperPathways.Controllers
     [Route("survival")]
     public class SurvivalController : ControllerBase
     {
-        private readonly TitanicContext _context;
+        private readonly IMediator _mediator;
 
-        public SurvivalController(TitanicContext context)
+        public SurvivalController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public ActionResult<FinalSurvivalRate> GetSurvivals()
+        public async Task<ActionResult<FinalSurvivalRate>> GetSurvivalRates()
+
         {
-            var totalMales = _context.Passengers.Count(p => p.Sex == "male");
-            var totalFemales = _context.Passengers.Count(p => p.Sex == "female");
+            var result = await _mediator.Send(new GetSurvivalsQuery());
 
-            var result = _context.Passengers
-                .AsEnumerable() // Added for testing. AsEnumerable converts to an in-memory collection without materializing the entire list.
-                .GroupBy(p => new { p.Survived, p.Sex })
-                .ToList();
-
-            var final = result.ToSurvivalStatsDto(totalMales, totalFemales);
-
-            return Ok(new FinalSurvivalRate { SurvivalRates = final });
+            return Ok(result);
         }
     }
 }
