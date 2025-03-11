@@ -8,4 +8,9 @@ namespace DeveloperPathways.Application.Queries
         public bool? Survived { get; set; }
     }
 
+    public class GetPassengerByIdQuery(int id) : IRequest<PassengerDto>
+    {
+        public int? Id { get; set; } = id;
+    }
+
 }

@@ -29,12 +29,12 @@ namespace DeveloperPathways.Controllers
             return Ok(passengers);
         }
 
-        //[HttpGet("{id:int}")]
-        //public async Task<ActionResult<PassengerDto>> GetPassengerById([FromRoute] int id)
-        //{
-        //    var result = await _mediator.Send(new GetPassengerByIdQuery(id));
-        //    return result is not null ? Ok(result) : NotFound();
-        //}
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<PassengerDto>> GetPassengerById([FromRoute] int id)
+        {
+            var result = await _mediator.Send(new GetPassengerByIdQuery(id));
+            return result is not null ? Ok(result) : NotFound();
+        }
 
 
 

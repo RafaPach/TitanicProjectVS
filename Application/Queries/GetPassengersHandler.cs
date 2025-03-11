@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperPathways.Application.Queries
 {
-    public class GetPassengersHandler : IRequestHandler<GetPassengersQuery, List<PassengerDto>>
+    public class GetPassengersHandler : IRequestHandler<GetPassengersQuery, List<PassengerDto>>,
+    IRequestHandler<GetPassengerByIdQuery, PassengerDto>
     {
         private readonly TitanicContext _context;
 
@@ -26,5 +27,16 @@ namespace DeveloperPathways.Application.Queries
             return await passengers.Select(passenger => passenger.ToPassengerDto()).ToListAsync(cancellationToken);
 
         }
+
+        public async Task<PassengerDto> Handle(GetPassengerByIdQuery request, CancellationToken cancellationToken)
+        {
+            var passenger = await _context.Passengers
+                .Where(p => p.PassengerId == request.Id)
+                .Select(p => p.ToPassengerDto())
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return passenger;
+        }
+
     }
 }

@@ -1,6 +1,8 @@
+using DeveloperPathways.Application.Queries;
 using DeveloperPathways.Data;
 using DeveloperPathways.Dtos;
 using DeveloperPathways.Mappers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -12,22 +14,17 @@ namespace DeveloperPathways.Controllers
     [Route("passenger-by-age")] 
     public class PassengerByAgeController : ControllerBase
     {
-        private readonly TitanicContext _context;
+        private readonly IMediator _mediator;
 
-        public PassengerByAgeController(TitanicContext context)
+        public PassengerByAgeController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public ActionResult<List<PassengerDto>> GetByAge()
+          public async Task<ActionResult<List<PassengerDto>>> GetByAge()
         {
-            var passengers = _context.Passengers
-                .Where(p => p.Age.HasValue) 
-                .OrderBy(p => p.Age) 
-                .Select(d => d.ToPassengerDto())
-                .ToList();
-
+            var passengers = await _mediator.Send(new GetPassengersByAgeQuery());
             return Ok(passengers);
         }
     }
