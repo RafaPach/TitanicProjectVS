@@ -1,5 +1,6 @@
 ﻿using DeveloperPathways.Data;
 using DeveloperPathways.Dtos;
+using DeveloperPathways.Interface;
 using DeveloperPathways.Mappers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +10,20 @@ namespace DeveloperPathways.Application.Queries
 {
     public class GetByClassHandler : IRequestHandler<GetByClassQuery, FinalClassBreakDown>
     {
-        private readonly TitanicContext _context;
+        private readonly IGetByClassRepository _getByClassRepository;
 
-        public GetByClassHandler (TitanicContext context)
+        public GetByClassHandler(IGetByClassRepository getByClassRepository)
         {
-            _context = context;
+            _getByClassRepository = getByClassRepository;
         }
         public async Task<FinalClassBreakDown> Handle(GetByClassQuery request, CancellationToken cancellationToken)
         {
+           var passenger = await _getByClassRepository.GetAllPassengersAsync(cancellationToken);
+
+
             return new FinalClassBreakDown
             {
-                ClassBreakdown = (await _context.Passengers
-                    .ToListAsync(cancellationToken))
-                    .ToClassAggregdationDto()
+                ClassBreakdown = passenger.ToClassAggregdationDto()
             };
         }
     }

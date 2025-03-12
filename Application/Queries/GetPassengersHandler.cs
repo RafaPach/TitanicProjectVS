@@ -4,38 +4,33 @@ using DeveloperPathways.Dtos;
 using DeveloperPathways.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using DeveloperPathways.Interface;
 
 namespace DeveloperPathways.Application.Queries
 {
     public class GetPassengersHandler : IRequestHandler<GetPassengersQuery, List<PassengerDto>>,
     IRequestHandler<GetPassengerByIdQuery, PassengerDto>
     {
-        private readonly TitanicContext _context;
+        private readonly IPassengerRepository _passengerRepository;
 
-        public GetPassengersHandler(TitanicContext context)
+        public GetPassengersHandler(IPassengerRepository passengerrepository)
         {
-            _context = context;
+            _passengerRepository = passengerrepository;
         }
 
         public async Task<List<PassengerDto>> Handle(GetPassengersQuery request, CancellationToken cancellationToken)
         {
-            var passengers = _context.Passengers.AsQueryable();
+            var passengers = await _passengerRepository.GetPassengersAsync(request.Survived, cancellationToken);
 
-            if (request.Survived.HasValue)
-                passengers = passengers.Where(p => p.Survived == request.Survived.Value);
-
-            return await passengers.Select(passenger => passenger.ToPassengerDto()).ToListAsync(cancellationToken);
+            return passengers.Select(p => p.ToPassengerDto()).ToList();
 
         }
 
         public async Task<PassengerDto> Handle(GetPassengerByIdQuery request, CancellationToken cancellationToken)
         {
-            var passenger = await _context.Passengers
-                .Where(p => p.PassengerId == request.Id)
-                .Select(p => p.ToPassengerDto())
-                .FirstOrDefaultAsync(cancellationToken);
+            var passenger = await _passengerRepository.GetPassengerByIdAsync(request.Id, cancellationToken);
 
-            return passenger;
+            return passenger.ToPassengerDto();
         }
 
     }

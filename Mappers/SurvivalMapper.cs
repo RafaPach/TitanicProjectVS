@@ -8,7 +8,7 @@ namespace DeveloperPathways.Mappers
     public static class SurvivalMapper
     {
         public static SurvivalDto ToSurvivalStatsDto(
-            this IEnumerable<IGrouping<dynamic, Passenger>> groups,
+            this IEnumerable<IGrouping<SurvivalGroupKeys, Passenger>> groups,
             int totalMales,
             int totalFemales)
         {
@@ -24,7 +24,7 @@ namespace DeveloperPathways.Mappers
                 var gender = group.Key.Sex;
                 var count = group.Count();
 
-                if (survived)
+                if (survived == true)
                 {
                     if (gender == "male")
                         survivalStats.Survived.Male = CalculatePercentage(count, totalMales);

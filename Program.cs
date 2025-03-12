@@ -3,6 +3,9 @@ using DeveloperPathways.Services;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using DeveloperPathways.Controllers;
+using DeveloperPathways.Interface;
+using DeveloperPathways.Infrastructure.Repositories;
+using DeveloperPathways.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<CsvService>();
+builder.Services.AddScoped<IPassengerRepository, PassengerRepository>();
+builder.Services.AddScoped<IGetByClassRepository, GetByClassRepository>();
+builder.Services.AddScoped<IGetSurivalRepository, GetSurvivalRepository>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

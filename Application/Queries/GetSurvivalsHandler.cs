@@ -1,4 +1,5 @@
 ﻿using DeveloperPathways.Data;
+using DeveloperPathways.Interface;
 using DeveloperPathways.Mappers;
 using DeveloperPathways.Models;
 using MediatR;
@@ -8,22 +9,19 @@ namespace DeveloperPathways.Application.Queries
 {
     public class GetSurvivalsHandler : IRequestHandler<GetSurvivalsQuery, FinalSurvivalRate>
     {
-        private readonly TitanicContext _context;
+        private readonly IGetSurivalRepository _getSurivalRepository;
 
-        public GetSurvivalsHandler (TitanicContext context)
+        public GetSurvivalsHandler(IGetSurivalRepository getSurivalRepository)
         {
-            _context = context;
+            _getSurivalRepository = getSurivalRepository;
         }
 
         public async Task<FinalSurvivalRate> Handle(GetSurvivalsQuery request, CancellationToken cancellationToken)
         {
-            var totalMales = await _context.Passengers.CountAsync(p => p.Sex == "male", cancellationToken);
-            var totalFemales = await _context.Passengers.CountAsync(p => p.Sex == "female", cancellationToken);
+            var totalMales = await _getSurivalRepository.GetTotalMalesAsync(cancellationToken);
+            var totalFemales = await _getSurivalRepository.GetTotalFemalesAsync(cancellationToken);
 
-            var data = await _context.Passengers
-               .AsNoTracking()
-               .GroupBy(p => new { p.Survived, p.Sex })
-               .ToListAsync(cancellationToken);
+            var data = await _getSurivalRepository.GetFinalData(cancellationToken);
 
             var result = data.ToSurvivalStatsDto(totalMales, totalFemales);
 
