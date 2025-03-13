@@ -5,7 +5,7 @@ using DeveloperPathways.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeveloperPathways.Application.Queries
+namespace DeveloperPathways.Application.Queries.GetSurvival
 {
     public class GetSurvivalsHandler : IRequestHandler<GetSurvivalsQuery, FinalSurvivalRate>
     {

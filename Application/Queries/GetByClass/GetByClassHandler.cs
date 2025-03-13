@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeveloperPathways.Application.Queries
+namespace DeveloperPathways.Application.Queries.GetByClass
 {
     public class GetByClassHandler : IRequestHandler<GetByClassQuery, FinalClassBreakDown>
     {

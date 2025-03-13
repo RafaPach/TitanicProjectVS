@@ -6,6 +6,9 @@ using DeveloperPathways.Controllers;
 using DeveloperPathways.Interface;
 using DeveloperPathways.Infrastructure.Repositories;
 using DeveloperPathways.Repository;
+using DeveloperPathways.Application.Queries.GetByAge
+using DeveloperPathways.Application.Queries.GetPassengers
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,10 @@ builder.Services.AddScoped<CsvService>();
 builder.Services.AddScoped<IPassengerRepository, PassengerRepository>();
 builder.Services.AddScoped<IGetByClassRepository, GetByClassRepository>();
 builder.Services.AddScoped<IGetSurivalRepository, GetSurvivalRepository>();
+
+builder.Services.AddScoped<IValidator<GetAllPassengersQuery>, GetAllPassengersQueryValidator>();
+builder.Services.AddScoped<IValidator<GetPassengerByIdQuery>, GetPassengerByIdQueryValidator>();
+builder.Services.AddScoped<IValidator<GetPassengersByAgeQuery>, GetPassengerByAgeQueryValidator>();
 
 
 var app = builder.Build();
