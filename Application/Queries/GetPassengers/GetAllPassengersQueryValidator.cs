@@ -7,26 +7,10 @@ namespace DeveloperPathways.Application.Queries.GetPassengers
     {
         public GetAllPassengersQueryValidator()
         {
-            RuleForEach(query => query.Passengers).SetValidator(new PassengerProperties());
+            RuleFor(x => x.Survived)
+                .Must(s => s == true || s == false || s == null)
+                .WithMessage("Survived must be true, false, or null.");
         }
 
-        public class  PassengerProperties : AbstractValidator<PassengerDto>
-        {
-            public PassengerProperties() {
-                RuleFor(x => x.Id).GreaterThan(0);
-
-                RuleFor(x => x.Name).NotNull();
-
-                RuleFor(x => x.Age).NotNull();
-
-                RuleFor(x => x.Sex).NotNull();
-
-                RuleFor(x => x.Fare).GreaterThan(0);
-
-                RuleFor(x => x.Cabin).NotNull();
-
-            }
-
-        } 
     }
 }

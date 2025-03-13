@@ -1,4 +1,4 @@
-using DeveloperPathways.Application.Queries;
+using DeveloperPathways.Application.Queries.GetSurvival;
 using DeveloperPathways.Data;
 using DeveloperPathways.Mappers;
 using DeveloperPathways.Models;

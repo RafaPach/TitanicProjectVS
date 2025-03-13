@@ -1,4 +1,4 @@
-using DeveloperPathways.Application.Queries;
+using DeveloperPathways.Application.Queries.GetByAge;
 using DeveloperPathways.Data;
 using DeveloperPathways.Dtos;
 using DeveloperPathways.Mappers;

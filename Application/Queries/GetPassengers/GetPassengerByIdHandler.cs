@@ -2,7 +2,6 @@
 using DeveloperPathways.Interface;
 using DeveloperPathways.Mappers;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace DeveloperPathways.Application.Queries.GetPassengers
@@ -13,27 +12,37 @@ namespace DeveloperPathways.Application.Queries.GetPassengers
         private readonly IValidator<GetPassengerByIdQuery> _validator;
         private readonly ILogger<GetPassengerByIdHandler> _logger;
 
-        public GetPassengerByIdHandler(IPassengerRepository passengerRepository, IValidator<GetPassengerByIdQuery> validator, ILogger<GetPassengerByIdHandler> logger)
+        public GetPassengerByIdHandler(
+            IPassengerRepository passengerRepository,
+            IValidator<GetPassengerByIdQuery> validator,
+            ILogger<GetPassengerByIdHandler> logger)
         {
             _passengerRepository = passengerRepository;
             _validator = validator;
             _logger = logger;
         }
+
         public async Task<PassengerDto> Handle(GetPassengerByIdQuery request, CancellationToken cancellationToken)
         {
-            var passenger = await _passengerRepository.GetPassengerByIdAsync(request.Id, cancellationToken);
-
-            ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            //  Validate first
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
             if (!validationResult.IsValid)
             {
-                _logger.LogError("Validation failed: {Errors}", validationResult.Errors);
+                _logger.LogWarning("Validation failed for GetPassengerByIdQuery: {Errors}", validationResult.Errors);
                 throw new ValidationException(validationResult.Errors);
             }
 
+            //  Then fetch data
+            var passenger = await _passengerRepository.GetPassengerByIdAsync(request.Id, cancellationToken);
+
+            if (passenger == null)
+            {
+                _logger.LogInformation("Passenger with ID {PassengerId} was not found.", request.Id);
+                throw new KeyNotFoundException($"Passenger with ID {request.Id} was not found.");
+            }
+
             return passenger.ToPassengerDto();
-
         }
-
     }
 }

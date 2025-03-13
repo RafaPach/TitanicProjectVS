@@ -4,7 +4,7 @@ using DeveloperPathways.Data;
 using DeveloperPathways.Dtos;
 using DeveloperPathways.Mappers;
 using MediatR;
-using DeveloperPathways.Application.Queries;
+using DeveloperPathways.Application.Queries.GetByClass;
 
 namespace DeveloperPathways.Controllers
 {

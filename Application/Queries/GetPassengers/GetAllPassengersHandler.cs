@@ -23,10 +23,7 @@ namespace DeveloperPathways.Application.Queries.GetPassengers
 
         public async Task<List<PassengerDto>> Handle(GetAllPassengersQuery request, CancellationToken cancellationToken)
         {
-            var passengers = await _passengerRepository.GetPassengersAsync(request.Survived, cancellationToken);
-            request.Passengers = passengers.Select(p => p.ToPassengerDto()).ToList();
-
-            ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -34,9 +31,16 @@ namespace DeveloperPathways.Application.Queries.GetPassengers
                 throw new ValidationException(validationResult.Errors);
             }
 
-            return request.Passengers;
+            var passengers = await _passengerRepository.GetPassengersAsync(request.Survived, cancellationToken);
 
+            return passengers.Select(p => p.ToPassengerDto()).ToList();
         }
+
+//FluentValidation is supposed to validate input, not results
+// If your goal is to validate the query input, like:
+//Survived must be true, false, or null (which it already is because it’s a nullable bool).
+//Anything else the user is passing in through GetAllPassengersQuery.
+//But you are currently validating the retrieved data from the database, which is not typically done in FluentValidation—unless you're validating commands before writing to the database.
 
     }
 }

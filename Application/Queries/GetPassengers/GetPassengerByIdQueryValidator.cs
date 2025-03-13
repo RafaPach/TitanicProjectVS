@@ -6,7 +6,7 @@ namespace DeveloperPathways.Application.Queries.GetPassengers
     {
         public GetPassengerByIdQueryValidator()
         {
-            RuleFor(x => x.Id).GreaterThan(0);
+            RuleFor(x => x.Id).GreaterThan(0).WithMessage("Passenger ID must be greater than zero.");
         }
     }
 }

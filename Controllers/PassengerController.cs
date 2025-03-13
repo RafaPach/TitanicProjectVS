@@ -3,7 +3,7 @@ using DeveloperPathways.Dtos;
 using DeveloperPathways.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using DeveloperPathways.Application.Queries;
+using DeveloperPathways.Application.Queries.GetPassengers;
 
 
 
@@ -25,7 +25,7 @@ namespace DeveloperPathways.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PassengerDto>>> GetPassengers([FromQuery] bool? survived)
         {
-            var passengers = await _mediator.Send(new GetPassengersQuery { Survived = survived });
+            var passengers = await _mediator.Send(new GetAllPassengersQuery { Survived = survived });
             return Ok(passengers);
         }
 
