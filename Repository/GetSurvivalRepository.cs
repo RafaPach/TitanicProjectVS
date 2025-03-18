@@ -25,14 +25,12 @@ namespace DeveloperPathways.Repository
             return await _context.Passengers.CountAsync(P => P.Sex == "female", cancellationToken);
         }
 
-        public async Task<List<IGrouping<SurvivalGroupKeys, Passenger>>> GetFinalData(CancellationToken cancellationToken)
+        public async Task<List<Passenger>> GetAllPassengersAsync(CancellationToken cancellationToken)
         {
-            var data = await _context.Passengers
-               .AsNoTracking()
-               .GroupBy(p => new SurvivalGroupKeys { Survived = p.Survived, Sex = p.Sex })
-               .ToListAsync(cancellationToken);
-
-            return data;
+            return await _context.Passengers
+                .AsNoTracking()
+                .Where(p => p.Survived != null)
+                .ToListAsync(cancellationToken);
         }
     }
 }

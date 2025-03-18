@@ -7,6 +7,6 @@ namespace DeveloperPathways.Interface
     {
         Task<int> GetTotalMalesAsync(CancellationToken cancellationToken);
         Task<int> GetTotalFemalesAsync(CancellationToken cancellationToken);
-        Task<List<IGrouping<SurvivalGroupKeys, Passenger>>> GetFinalData(CancellationToken cancellationToken);
+        Task<List<Passenger>> GetAllPassengersAsync(CancellationToken cancellationToken); 
     }
 }

@@ -21,9 +21,9 @@ namespace DeveloperPathways.Application.Queries.GetSurvival
             var totalMales = await _getSurivalRepository.GetTotalMalesAsync(cancellationToken);
             var totalFemales = await _getSurivalRepository.GetTotalFemalesAsync(cancellationToken);
 
-            var data = await _getSurivalRepository.GetFinalData(cancellationToken);
+            var passengers = await _getSurivalRepository.GetAllPassengersAsync(cancellationToken);
 
-            var result = data.ToSurvivalStatsDto(totalMales, totalFemales);
+            var result = passengers.ToSurvivalStatsDto(totalMales, totalFemales);
 
             return new FinalSurvivalRate
             {
