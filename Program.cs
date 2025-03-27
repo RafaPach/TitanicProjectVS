@@ -1,4 +1,4 @@
-using DeveloperPathways.Data;
+﻿using DeveloperPathways.Data;
 using DeveloperPathways.Services;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
@@ -24,7 +24,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<CsvOptions>(builder.Configuration.GetSection("CsvOptions"));
 builder.Services.AddScoped<CsvService>();
+builder.Services.AddHostedService<CsvWorker>();
+
 builder.Services.AddScoped<IPassengerRepository, PassengerRepository>();
 builder.Services.AddScoped<IGetByAgeRepository, GetByAgeRepository>();
 builder.Services.AddScoped<IGetByClassRepository, GetByClassRepository>();
@@ -50,11 +54,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-    var csvService = scope.ServiceProvider.GetRequiredService<CsvService>();
-    csvService.RetrieveCsv();
-}
 
 app.Run();

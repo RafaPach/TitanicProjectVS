@@ -7,19 +7,21 @@ using CsvHelper;
 using DeveloperPathways.Data;
 using DeveloperPathways.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DeveloperPathways.Services
 {
     public class CsvService
     {
-      private readonly string _filePath;
+        private readonly string _filePath;
         private readonly DbContextOptions<TitanicContext> _dbOptions;
 
-        public CsvService()
+        public CsvService(IOptions<CsvOptions> options)
         {
-            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "titanic.csv");
+            var csvOptions = options.Value;
+            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), options.Value.FilePath);
             _dbOptions = new DbContextOptionsBuilder<TitanicContext>()
-                .UseSqlServer(@"Server=DESKTOP-V4GVEDM\SQLEXPRESS;Database=titanic;Trusted_Connection=True;TrustServerCertificate=True;")
+                .UseSqlServer(csvOptions.ConnectionString)
                 .Options;
         }
 
@@ -35,7 +37,7 @@ namespace DeveloperPathways.Services
             {
                 using var reader = new StreamReader(_filePath);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-                
+
                 csv.Context.TypeConverterOptionsCache.GetOptions<double?>().NullValues.Add("");
                 csv.Read();
                 csv.ReadHeader();
@@ -86,7 +88,7 @@ namespace DeveloperPathways.Services
 
         private static void SaveRecordsToDatabase(List<Passenger> passengers, TitanicContext context)
         {
-            if (passengers.Count > 0 )
+            if (passengers.Count > 0)
             {
                 context.Passengers.AddRange(passengers);
                 context.SaveChanges();
